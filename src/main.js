@@ -15,7 +15,6 @@ export default class Sketch {
     this.renderer.setClearColor(0xeeeeee, 1);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.outputEncoding = THREE.sRGBEncoding;
-    //this.renderer.antialias = true;
 
     this.container.appendChild(this.renderer.domElement);
 
@@ -33,22 +32,10 @@ export default class Sketch {
     this.resize();
     this.render();
     this.setupResize();
-    this.setupMouse();
   }
 
   setupResize() {
     window.addEventListener("resize", this.resize.bind(this));
-  }
-  
-  setupMouse() {
-    window.addEventListener('mousemove', this.mousePos.bind(this));
-  }
-
-  mousePos(e) {
-    this.material.uniforms.u_mouse.value = {
-      x: e.screenX,
-      y: e.screenY,
-    };
   }
 
   resize() {
@@ -74,22 +61,15 @@ export default class Sketch {
   }
 
   addObjects() {
-    const loader = new THREE.TextureLoader();
-    this.img_danny = loader.load("assets/danny.png");
-
     this.material = new THREE.ShaderMaterial({
       extensions: {
         derivatives: "#extension GL_OES_standard_derivatives : enable",
       },
       side: THREE.DoubleSide,
       uniforms: {
-        u_tex0: { value: this.img_danny },
         u_time: { value: 0 },
-        u_mouse: { value: new THREE.Vector2() },
         u_resolution: { value: new THREE.Vector2() },
       },
-      // wireframe: true,
-      // transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
